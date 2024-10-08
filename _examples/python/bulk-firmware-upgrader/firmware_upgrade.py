@@ -52,8 +52,10 @@ for ip in ips: # Iterate over all specified devices
     url = cgi_url + 'login'
     data = {'username': args.username, 'password': args.password}
     headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
-    response = make_request(method='post', url=url, headers=headers, json=data)
-
+    try:
+        response = make_request(method='post', url=url, headers=headers, json=data)
+    except:
+        continue
     # Check success of authentication.
     if response.status_code == 200:
         print('Authentication successful!')
@@ -72,8 +74,9 @@ for ip in ips: # Iterate over all specified devices
 
     url = cgi_url + 'stats?type=system'
     headers = {'accept': 'application/json', 'Cookie': f'api_token={auth_token}'}
+    
     response = make_request(method='get', url=url, headers=headers)
-
+    
     # Check success of firmware version fetch.
     if response.status_code == 200:
         specified_firmware_name = args.firmware.split('/')[-1]            # User specified firmware version
